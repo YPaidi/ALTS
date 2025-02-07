@@ -76,4 +76,11 @@ app.delete("/api/students/:id", (req, res) => {
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+
+app.get("/", (req, res) => {
+  res.send("Welcome to the Assessment Load Tracker API!");
+});
+
+
+
 });
