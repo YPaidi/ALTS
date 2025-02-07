@@ -16,9 +16,11 @@ saveStudentInfo(); // Panggil API untuk simpan data
     setIsStudentInfoSaved(true);
   };
 
+const API_BASE_URL = "https://assessment-load-tracker-for-students.onrender.com";
+
 const saveStudentInfo = async () => {
   try {
-    const response = await fetch("http://localhost:3001/api/students", {
+    const response = await fetch(`${API_BASE_URL}/api/students`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(studentInfo),
@@ -45,13 +47,10 @@ const saveStudentInfo = async () => {
 
 const saveCourseInfo = async (courseData) => {
   try {
-    const response = await fetch("http://localhost:3001/api/courses", {
+    const response = await fetch(`${API_BASE_URL}/api/courses`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        studentId: studentInfo.id,
-        ...courseData,
-      }),
+      body: JSON.stringify({ studentId: studentInfo.id, ...courseData }),
     });
 
     if (!response.ok) {
