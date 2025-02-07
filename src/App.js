@@ -1,4 +1,4 @@
-import './App.css';
+import "./App.css";
 import React, { useState } from "react";
 import CourseForm from "./components/CourseForm";
 
@@ -7,61 +7,61 @@ const App = () => {
   const [submittedData, setSubmittedData] = useState([]);
   const [isStudentInfoSaved, setIsStudentInfoSaved] = useState(false);
 
+  const API_BASE_URL = "https://assessment-load-tracker-for-students.onrender.com";
+
   const handleStudentInfoSubmit = () => {
     if (!studentInfo.id || !studentInfo.name) {
       alert("Please fill in the student name and ID.");
       return;
     }
-saveStudentInfo(); // Panggil API untuk simpan data
+    saveStudentInfo();
     setIsStudentInfoSaved(true);
   };
 
-const API_BASE_URL = "https://assessment-load-tracker-for-students.onrender.com";
+  const saveStudentInfo = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/students`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(studentInfo),
+      });
 
-const saveStudentInfo = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/students`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(studentInfo),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to save student information");
+      if (!response.ok) {
+        throw new Error("Failed to save student information");
+      }
+      const data = await response.json();
+      console.log("Student info saved:", data);
+    } catch (error) {
+      console.error("Error saving student information:", error);
     }
-    const data = await response.json();
-    console.log("Student info saved:", data);
-  } catch (error) {
-    console.error("Error saving student information:", error);
-  }
-};
+  };
 
   const handleFormSubmit = (courseData) => {
     if (!courseData.name || !Array.isArray(courseData.assessments)) {
       alert("Invalid course data.");
       return;
     }
-  saveCourseInfo(courseData); // Panggil API untuk simpan data
+    saveCourseInfo(courseData);
     setSubmittedData([...submittedData, courseData]);
   };
 
-const saveCourseInfo = async (courseData) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/courses`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ studentId: studentInfo.id, ...courseData }),
-    });
+  const saveCourseInfo = async (courseData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/courses`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ studentId: studentInfo.id, ...courseData }),
+      });
 
-    if (!response.ok) {
-      throw new Error("Failed to save course information");
+      if (!response.ok) {
+        throw new Error("Failed to save course information");
+      }
+      const data = await response.json();
+      console.log("Course info saved:", data);
+    } catch (error) {
+      console.error("Error saving course information:", error);
     }
-    const data = await response.json();
-    console.log("Course info saved:", data);
-  } catch (error) {
-    console.error("Error saving course information:", error);
-  }
-};
+  };
 
   const groupByCourse = (data) => {
     return data.reduce((result, current) => {
@@ -99,6 +99,37 @@ const saveCourseInfo = async (courseData) => {
   };
 
   const groupedCourses = groupByCourse(submittedData);
+
+  const handleSaveAdditionalData = () => {
+    const additionalData = {
+      id: studentInfo.id,
+      name: studentInfo.name,
+      courses: submittedData,
+    };
+
+    saveAdditionalData(additionalData);
+  };
+
+  const saveAdditionalData = async (updatedStudentInfo) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/students/${updatedStudentInfo.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedStudentInfo),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save additional student data");
+      }
+
+      const data = await response.json();
+      console.log("Additional data saved:", data);
+      alert("Data has been updated successfully!");
+    } catch (error) {
+      console.error("Error saving additional data:", error);
+      alert("Failed to save data. Please try again.");
+    }
+  };
 
   return (
     <div className="App">
@@ -170,6 +201,21 @@ const saveCourseInfo = async (courseData) => {
               </li>
             ))}
           </ul>
+
+          <button
+            onClick={handleSaveAdditionalData}
+            style={{
+              backgroundColor: "#6c63ff",
+              color: "#fff",
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              marginTop: "20px",
+            }}
+          >
+            Save Additional Data
+          </button>
         </>
       )}
     </div>

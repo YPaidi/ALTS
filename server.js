@@ -81,6 +81,22 @@ app.get("/", (req, res) => {
   res.send("Welcome to the Assessment Load Tracker API!");
 });
 
+// Endpoint untuk memperbarui data pelajar
+app.put("/api/students/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, courses } = req.body;
+
+  if (!students[id]) {
+    return res.status(404).json({ error: "Student not found" });
+  }
+
+  // Perbarui data pelajar
+  if (name) students[id].name = name;
+  if (Array.isArray(courses)) students[id].courses = [...students[id].courses, ...courses];
+
+  res.status(200).json({ message: "Student data updated", student: students[id] });
+});
+
 
 
 });
