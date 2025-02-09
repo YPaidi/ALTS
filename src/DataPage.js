@@ -32,7 +32,7 @@ export default function DataPage() {
     // Coba ambil data lama dari server
     try {
       const response = await fetch(
-        `http://localhost:3001/api/data?email=${email}`
+        `https://assessment-load-tracker-for-students.onrender.com/api/data?email=${email}`
       );
       if (response.ok) {
         // Status 200 => data lama ditemukan
@@ -124,7 +124,7 @@ export default function DataPage() {
   // ==================================
   const handleSave = async () => {
     try {
-      const response = await fetch("http://localhost:3001/api/save", {
+      const response = await fetch("https://assessment-load-tracker-for-students.onrender.com/api/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -156,7 +156,7 @@ export default function DataPage() {
     }
     try {
       const response = await fetch(
-        `http://localhost:3001/api/delete?email=${email}`,
+        `https://assessment-load-tracker-for-students.onrender.com/api/delete?email=${email}`,
         {
           method: "DELETE",
         }
