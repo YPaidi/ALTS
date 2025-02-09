@@ -1,6 +1,6 @@
 // src/App.js
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import DataPage from "./DataPage";
 
 // Komponen Layout: Ada header, footer, dan di tengah {children}
@@ -25,12 +25,13 @@ function Layout({ children }) {
 export default function App() {
   return (
     <Router>
+      {/* Bungkus semua Routes dengan Layout */}
       <Layout>
         <Routes>
-          {/* Rute Halaman Utama */}
-          <Route path="/" element={<h1>Homepage</h1>} />
-
-          {/* Rute DataPage */}
+          {/* Saat user ke "/", redirect ke "/data" */}
+          <Route path="/" element={<Navigate to="/data" replace />} />
+          
+          {/* Rute /data menampilkan DataPage */}
           <Route path="/data" element={<DataPage />} />
         </Routes>
       </Layout>
